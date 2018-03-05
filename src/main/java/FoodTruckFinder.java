@@ -17,8 +17,8 @@ import java.util.Scanner;
 
 public class FoodTruckFinder {
 
-  private final static int LIMIT = 1000; // API limit is 1000 results per call
-  private final static int PAGE_SIZE = 10; // Setting the user display limit of 10 results per page
+  private static final int LIMIT = 1000; // API limit is 1000 results per call
+  private static final int PAGE_SIZE = 10; // Setting the user display limit of 10 results per page
   private static final String BASE_URL = "http://data.sfgov.org/resource/bbb8-hzi6.json";
   // Queue to keep track of the results to be displayed next to the user
   private static Queue<FoodTruckModel> mainQueue = new LinkedList<>();
