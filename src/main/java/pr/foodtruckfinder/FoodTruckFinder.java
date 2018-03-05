@@ -1,3 +1,5 @@
+package pr.foodtruckfinder;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dnl.utils.text.table.TextTable;
