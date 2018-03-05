@@ -11,9 +11,15 @@ The output is returned to the console in the following format:
 | ...             | ...
 
 ## Getting Started
-- Clone this repository (git clone https://github.com/codesaiyan/FoodTruckFinder.git)
+- Clone this repository
+
+`git clone https://github.com/codesaiyan/FoodTruckFinder.git`
+
 - Open the Java project as a Maven project using the pom.xml file.
-- To build the project, open a terminal/command line instance within the project directory and execute the command "mvn clean install"
+- To build the project, open a terminal/command line instance within the project directory and execute the command
+
+`mvn clean install`
+
 - Execute the FoodTruckFinder.java file to run the program and check the results in the console.
 
 
