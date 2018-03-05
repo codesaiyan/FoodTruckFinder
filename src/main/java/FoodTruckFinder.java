@@ -21,11 +21,14 @@ public class FoodTruckFinder {
   private final static int PAGE_SIZE = 10; // Setting the user display limit of 10 results per page
   private static final String BASE_URL = "http://data.sfgov.org/resource/bbb8-hzi6.json";
   private static Queue<FoodTruckModel> mainQueue = new LinkedList<>(); //
-  private int offset = 0;
+  private static int offset = 0;
 
   public static void main(String[] args) throws IOException {
-    FoodTruckFinder foodTruckFinder = new FoodTruckFinder();
-    List<FoodTruckModel> results = foodTruckFinder.mainHandler();
+    run();
+  }
+
+  private static void run() throws IOException {
+    List<FoodTruckModel> results = getResultsForDisplay();
     displayConsoleOutput(results);
     int size = results.size();
     boolean userWantsToContinue = true;
@@ -38,7 +41,7 @@ public class FoodTruckFinder {
       option = option.toLowerCase();
       switch (option) {
         case "y":
-          results = foodTruckFinder.mainHandler();
+          results = getResultsForDisplay();
           size = results.size();
           displayConsoleOutput(results);
           break;
@@ -68,10 +71,10 @@ public class FoodTruckFinder {
   }
 
   /**
-   * This method calls the foodtruck API and returns a list of FoodTruck Model objects mapped from
+   * This method calls the FoodTruck API and returns a list of FoodTruck Model objects mapped from
    * the API JSON response
    */
-  private List<FoodTruckModel> getData(int offset) throws IOException {
+  private static List<FoodTruckModel> getData(int offset) throws IOException {
     StringBuilder result = new StringBuilder();
     URL url = new URL(BASE_URL + "?$limit=" + LIMIT + "&$offset=" + offset);
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -87,7 +90,7 @@ public class FoodTruckFinder {
         });
   }
 
-  private List<FoodTruckModel> getFilteredList(List<FoodTruckModel> list) {
+  private static List<FoodTruckModel> getFilteredList(List<FoodTruckModel> list) {
     List<FoodTruckModel> resultList = new ArrayList<>();
 
     LocalDateTime localDateTime = LocalDateTime.now();
@@ -108,7 +111,7 @@ public class FoodTruckFinder {
   }
 
   // always return list of size count
-  private List<FoodTruckModel> getNextResults() throws IOException {
+  private static List<FoodTruckModel> getNextResults() throws IOException {
 
     List<FoodTruckModel> result = new ArrayList<>();
     List<FoodTruckModel> rawList;
@@ -128,7 +131,7 @@ public class FoodTruckFinder {
     return result;
   }
 
-  private List<FoodTruckModel> mainHandler() throws IOException {
+  private static List<FoodTruckModel> getResultsForDisplay() throws IOException {
 
     List<FoodTruckModel> myList = new ArrayList<>();
 
