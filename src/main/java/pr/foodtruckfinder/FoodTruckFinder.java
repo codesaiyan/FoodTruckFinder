@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -32,10 +33,10 @@ public class FoodTruckFinder {
 
   private static void run() throws IOException {
     List<FoodTruckModel> results = getResultsForDisplay();
+    sortByFoodTruckName(results);
     displayConsoleOutput(results);
     int size = results.size();
     boolean userWantsToContinue = true;
-
     Scanner reader = null;
     while (size == PAGE_SIZE && userWantsToContinue) {
       reader = new Scanner(System.in);  // Reading from System.in
@@ -46,6 +47,7 @@ public class FoodTruckFinder {
         case "y":
           results = getResultsForDisplay();
           size = results.size();
+          sortByFoodTruckName(results);
           displayConsoleOutput(results);
           break;
         case "n":
@@ -56,6 +58,11 @@ public class FoodTruckFinder {
     if (reader != null) {
       reader.close();
     }
+  }
+
+  private static void sortByFoodTruckName(List<FoodTruckModel> foodTrucks) {
+    Collections.sort(foodTrucks,
+        (item1, item2) -> item1.getFoodTruckName().compareTo(item2.getFoodTruckName()));
   }
 
   /**
