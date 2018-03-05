@@ -1,5 +1,6 @@
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dnl.utils.text.table.TextTable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,15 +17,17 @@ import java.util.Scanner;
 
 public class FoodTruckFinder {
 
-  private final static int LIMIT = 1000;
-  private final static int PAGE_SIZE = 10;
+  private final static int LIMIT = 1000; // API limit is 1000 results per call
+  private final static int PAGE_SIZE = 10; // Setting the user display limit of 10 results per page
   private static final String BASE_URL = "http://data.sfgov.org/resource/bbb8-hzi6.json";
-  private static Queue<FoodTruckModel> mainQueue = new LinkedList<>();
+  private static Queue<FoodTruckModel> mainQueue = new LinkedList<>(); //
   private int offset = 0;
 
   public static void main(String[] args) throws IOException {
     FoodTruckFinder foodTruckFinder = new FoodTruckFinder();
-    int size = foodTruckFinder.mainHandler().size();
+    List<FoodTruckModel> results = foodTruckFinder.mainHandler();
+    displayConsoleOutput(results);
+    int size = results.size();
     boolean userWantsToContinue = true;
 
     Scanner reader = null;
@@ -35,26 +38,42 @@ public class FoodTruckFinder {
       option = option.toLowerCase();
       switch (option) {
         case "y":
-          size = foodTruckFinder.mainHandler().size();
-          System.out.printf("%-30.30s  %-30.30s%n", "NAME", "ADDRESS");
+          results = foodTruckFinder.mainHandler();
+          size = results.size();
+          displayConsoleOutput(results);
           break;
         case "n":
           userWantsToContinue = false;
           break;
       }
-
     }
-
     if (reader != null) {
       reader.close();
     }
-
   }
 
+  private static void displayConsoleOutput(List<FoodTruckModel> results) {
+    String[] columnNames = {"NAME", "ADDRESS"};
+    String[][] data = new String[results.size()][2];
+    int count = 0;
+    for (FoodTruckModel item : results) {
+      data[count][0] = item.getFoodTruckName();
+      data[count][1] = item.getAddress();
+      count++;
+    }
+    TextTable tt = new TextTable(columnNames, data);
+    // this adds the numbering on the left
+    tt.setAddRowNumbering(true);
+    tt.printTable();
+  }
+
+  /**
+   * This method calls the foodtruck API and returns a list of FoodTruck Model objects mapped from
+   * the API JSON response
+   */
   private List<FoodTruckModel> getData(int offset) throws IOException {
     StringBuilder result = new StringBuilder();
     URL url = new URL(BASE_URL + "?$limit=" + LIMIT + "&$offset=" + offset);
-    System.out.println(url.toString());
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
     BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
